@@ -1,7 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras.callbacks import ModelCheckpoint
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 
 # configuration
@@ -17,18 +16,16 @@ training_ds = tf.keras.preprocessing.image_dataset_from_directory(
     subset= "training",
     image_size= (img_height, img_width),
     batch_size=batch_size
-
 )
 
 ## loading testing data
 testing_ds = tf.keras.preprocessing.image_dataset_from_directory(
-'data/',
+    'data/',
     validation_split=0.2,
     seed = 42,
     subset= "validation",
     image_size= (img_height, img_width),
     batch_size=batch_size
-
 )
 
 class_names = training_ds.class_names

@@ -43,11 +43,11 @@ def detect(image):
 
 
     # image dimention
-    img_width, img_height = 200, 200
+    img_width, img_height = 250, 250
 
     # converting image from bytes to numpy array
     color_img = np.array(image)
-    # rgb format
+    # bgr format
     color_img = color_img[:, :, ::-1]
 
 
@@ -70,7 +70,7 @@ def detect(image):
     class_lable = ""
 
     # default prediction accuracy
-    pred_acc = 0
+    pred_acc = -1
     
     # feed faces from haar cascade classifier to our custom neural network
     img_count = 0
@@ -94,8 +94,8 @@ def detect(image):
         # max probablity -- 0 or 1 (0 for Mask and 1 for Not wearning Mask)
         pred=np.argmax(pred_prob)
 
-        if pred==0:
-            pred_acc = pred_prob[0][0]
+        if pred==1:
+            pred_acc = pred_prob[0][1]
             class_lable = "Mask"
             color = (255, 0, 0)
             cv2.rectangle(color_img, (x, y), (x+w, y+h), (0, 0, 255), 3)
@@ -103,7 +103,7 @@ def detect(image):
             cv2.putText(color_img, class_lable, org, font, fontScale, color, thickness, cv2.LINE_AA)
 
         else:
-            pred_acc = pred_prob[0][1]
+            pred_acc = pred_prob[0][0]
             class_lable = "No Mask"
             color = (0, 255, 0)
 
@@ -112,7 +112,7 @@ def detect(image):
         cv2.putText(color_img, class_lable, org, font, fontScale, color, thickness, cv2.LINE_AA) 
 
     color_img = color_img[:, :, ::-1]
-    if class_lable == "":
+    if class_lable == "" and pred_acc == -1:
         class_lable = "Unable to predict. Try any other picture!"
 
     # Returning the image with bounding boxes drawn on it (in case of detected objects), and faces array
